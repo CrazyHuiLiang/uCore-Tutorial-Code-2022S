@@ -87,12 +87,17 @@ SBI			?= rustsbi
 BOOTLOADER	:= ./bootloader/rustsbi-qemu.bin
 
 QEMU = qemu-system-riscv64
+# -nographic 表示模拟器不使用图形界面，只需要对外输出字符流
+# -machine virt 计算机设置名为virt
+# -bios 设置 qemu 模拟器开机时用来初始化的引导加载程序(bootloader)
 QEMUOPTS = \
 	-nographic \
 	-machine virt \
 	-bios $(BOOTLOADER) \
 	-kernel build/kernel	\
+#	-device loader,file=target/riscv64gc-unknown-none-elf/release/os.bin,addr=0x80200000
 
+# 依赖 build/kernel
 run: build/kernel
 	$(QEMU) $(QEMUOPTS)
 
