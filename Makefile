@@ -70,14 +70,17 @@ endif
 
 LDFLAGS = -z max-page-size=4096
 
+# 构建 os/ 所有的 .S文件
 $(AS_OBJS): $(BUILDDIR)/$K/%.o : $K/%.S
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# 构建 os/ 所有的 .c 文件
 $(C_OBJS): $(BUILDDIR)/$K/%.o : $K/%.c  $(BUILDDIR)/$K/%.d
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# 根据 os/ 下的.c 生成 .d
 $(HEADER_DEP): $(BUILDDIR)/$K/%.d : $K/%.c
 	@mkdir -p $(@D)
 	@set -e; rm -f $@; $(CC) -MM $< $(INCLUDEFLAGS) > $@.$$$$; \
@@ -86,6 +89,9 @@ $(HEADER_DEP): $(BUILDDIR)/$K/%.d : $K/%.c
 
 build: build/kernel
 
+# 构建
+# 依赖所有的.c 和 .S 的构建（make会隐含的自动构建）
+# 链接、输出汇编代码
 build/kernel: $(OBJS)
 	$(LD) $(LDFLAGS) -T os/kernel.ld -o $(BUILDDIR)/kernel $(OBJS)
 	$(OBJDUMP) -S $(BUILDDIR)/kernel > $(BUILDDIR)/kernel.asm
