@@ -1,13 +1,19 @@
+# 定义虚目标
 .PHONY: clean build user
-all: build_kernel
+# 默认第一个目标为 build
+all: build
 
+# 如果LOG没有被定义，则将其定义为error
 LOG ?= error
 
 K = os
 
 TOOLPREFIX = riscv64-unknown-elf-
+# 编译器为gcc
 CC = $(TOOLPREFIX)gcc
+# 汇编器使用gcc
 AS = $(TOOLPREFIX)gcc
+# 链接器使用ld
 LD = $(TOOLPREFIX)ld
 OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
@@ -16,15 +22,23 @@ GDB = $(TOOLPREFIX)gdb
 CP = cp
 MKDIR_P = mkdir -p
 
+# 构建产出目录
 BUILDDIR = build
+# os目录下所有的.c文件
 C_SRCS = $(wildcard $K/*.c)
+# os目录下所有的.S文件
 AS_SRCS = $(wildcard $K/*.S)
+# 将所有构建出来的.o文件置于 build/os/
 C_OBJS = $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(C_SRCS))))
+# 将汇编构建出来的.o文件置于 build/os/
 AS_OBJS = $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(basename $(AS_SRCS))))
+# 所有的构建出来的 .o 文件
 OBJS = $(C_OBJS) $(AS_OBJS)
 
+# 依据.c文件 计算出其依赖项，保存至同名 .d 文件
 HEADER_DEP = $(addsuffix .d, $(basename $(C_OBJS)))
 
+# 将.d文件（伪目标）都导入
 -include $(HEADER_DEP)
 
 CFLAGS = -Wall -Werror -O -fno-omit-frame-pointer -ggdb
