@@ -1,3 +1,4 @@
+// 内核主函数
 #include "console.h"
 #include "defs.h"
 
@@ -7,6 +8,7 @@ extern char s_rodata[];
 extern char e_rodata[];
 extern char s_data[];
 extern char e_data[];
+
 extern char s_bss[];
 extern char e_bss[];
 

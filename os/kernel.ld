@@ -1,5 +1,6 @@
+/* 控制内核内存布局的链接脚本以使内核运行在 qemu 虚拟机上 */
 OUTPUT_ARCH(riscv)
-ENTRY(_entry)
+ENTRY(_entry)               /* 入口地址为_entry */
 BASE_ADDRESS = 0x80200000;
 
 SECTIONS
