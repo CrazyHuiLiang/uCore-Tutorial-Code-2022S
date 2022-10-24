@@ -3,6 +3,40 @@
 
 #include "types.h"
 
+/*
+https://juejin.cn/post/6891962672892837901
+
+	CSR 控制与状态寄存器(control and status registers)
+
+	csrr，读取一个 CSR 的值到通用寄存器。如：csrr t0, mstatus，读取 mstatus 的值到 t0 中。
+	csrw，把一个通用寄存器中的值写入 CSR 中。如：csrw mstatus, t0，将 t0 的值写入 mstatus。
+
+	csrs，把 CSR 中指定的 bit 置 1。如：csrsi mstatus, (1 << 2)，将 mstatus 的右起第 3 位置 1。
+	csrc，把 CSR 中指定的 bit 置 0。如：csrci mstatus, (1 << 2)，将 mstatus 的右起第 3 位置 0。
+	
+	csrrw，读取一个 CSR 的值到通用寄存器，然后把另一个值写入该 CSR。如：csrrw t0, mstatus, t0，将 mstatus 的值与 t0 的值交换。
+	csrrs，读取一个 CSR 的值到通用寄存器，然后把该 CSR 中指定的 bit 置 1。
+	csrrc，读取一个 CSR 的值到通用寄存器，然后把该 CSR 中指定的 bit 置 0。
+
+
+
+
+	这些指令都有 R 格式和 I 格式，I 格式的指令名需要在 R 格式的指令名之后附加字母 i，如 R 格式指令 csrr 对应的 I 格式指令为 csrri
+	前 4 种操作 csrr / csrw / csrs / csrc 是伪指令，这些指令会由汇编器翻译成对应的 csrrw / csrrs / csrrc 指令
+
+
+	RISC-V 规范中只提供了一种在不同特权模式间切换的方法，即借助中断返回机制
+
+	开启中断共需要经过两个步骤，其中 mstatus[MIE] 是中断总开关（MIE 是 machine interrupt enabled 的缩写），mie CSR 是针对每种中断类型的独立开关。只有当两个 CSR 都正确设置时，才能够触发中断。
+
+
+	中断响应程序的地址需要放在 mtvec CSR 中。目前 RISC-V 支持两种类型的中断向量：
+
+	直接模式（direct），所有类型的中断均发送给同一个中断响应程序。
+	向量化模式（vectored），外部中断 将根据 中断类型 发送给不同的中断响应程序，但所有的 异常 仍然发送给 同一个 异常响应程序。
+*/
+
+
 // which hart (core) is this?
 static inline uint64 r_mhartid()
 {
